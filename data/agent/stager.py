@@ -10,11 +10,11 @@ import struct
 import os
 import pwd
 import hashlib
-import random
 import string
 import hmac
 import urllib2
 import socket
+import secrets
 
 # If a secure random number generator is unavailable, exit with an error.
 try:
@@ -521,7 +521,7 @@ def CBCdec(aesObj, ciphertext, base64=False):
 
 def getIV():
     # return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in xrange(16))
-    return ''.join(chr(random.randint(0, 255)) for _ in range(16))
+    return ''.join(chr(secrets.SystemRandom().randint(0, 255)) for _ in range(16))
 
 
 def aes_encrypt(key, data):
@@ -630,7 +630,7 @@ def get_sysinfo():
 
 
 # generate a randomized sessionID
-sessionID = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in xrange(16))
+sessionID = ''.join(secrets.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in xrange(16))
 
 # server configuration information
 key = "REPLACE_STAGING_KEY"
