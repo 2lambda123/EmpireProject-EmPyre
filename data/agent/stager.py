@@ -164,26 +164,86 @@ class DiffieHellman(object):
 
 
 def _compact_word(word):
+    """"Converts a word into a compact form by shifting each character into a single integer value."
+    Parameters:
+        - word (str): The word to be converted into a compact form.
+    Returns:
+        - int: The compact form of the word.
+    Processing Logic:
+        - Shifts each character into a single integer value.
+        - Uses bitwise operators to combine the shifted values.
+        - Returns the resulting integer value."""
+    
     return (word[0] << 24) | (word[1] << 16) | (word[2] << 8) | word[3]
 
 
 def _string_to_bytes(text):
+    """Converts a string to a list of bytes.
+    Parameters:
+        - text (str): The string to be converted to bytes.
+    Returns:
+        - list: A list of bytes corresponding to the characters in the string.
+    Processing Logic:
+        - Convert each character to its ASCII code.
+        - Create a list of the ASCII codes.
+        - Return the list.
+        - Example: _string_to_bytes("hello") returns [104, 101, 108, 108, 111]"""
+    
     return list(ord(c) for c in text)
 
 
 def _bytes_to_string(binary):
+    """Converts a binary string to a string.
+    Parameters:
+        - binary (bytes): Binary string to be converted.
+    Returns:
+        - str: Converted string.
+    Processing Logic:
+        - Convert each byte to character.
+        - Join all characters into a string."""
+    
     return "".join(chr(b) for b in binary)
 
 
 def _concat_list(a, b):
+    """"Concatenates two lists and returns the result."
+    Parameters:
+        - a (list): First list to be concatenated.
+        - b (list): Second list to be concatenated.
+    Returns:
+        - list: Concatenated list of a and b.
+    Processing Logic:
+        - Check if both parameters are lists.
+        - Use the '+' operator to concatenate lists.
+        - Return the concatenated list."""
+    
     return a + b
 
 
 def to_bufferable(binary):
+    """"Converts a binary string to a bufferable format."
+    Parameters:
+        - binary (str): A binary string to be converted.
+    Returns:
+        - bufferable (str): A bufferable version of the binary string.
+    Processing Logic:
+        - Convert binary string to bufferable format.
+        - No additional processing logic required."""
+    
     return binary
 
 
 def _get_byte(c):
+    """Returns the ASCII value of the given character.
+    Parameters:
+        - c (str): The character to be converted to ASCII.
+    Returns:
+        - int: The ASCII value of the given character.
+    Processing Logic:
+        - Convert the given character to ASCII.
+        - Use the ord() function.
+        - Return the ASCII value."""
+    
     return ord(c)
 
 # Python 3 compatibility
@@ -216,6 +276,17 @@ except Exception:
 
 
 def append_PKCS7_padding(data):
+    """Appends PKCS7 padding to the given data.
+    Parameters:
+        - data (str): The data to be padded.
+    Returns:
+        - str: The padded data.
+    Processing Logic:
+        - If data length is already a multiple of 16, return data.
+        - Otherwise, calculate padding amount.
+        - Append padding to data.
+        - Convert padding to bufferable format."""
+    
     if (len(data) % 16) == 0:
         return data
     else:
@@ -224,6 +295,17 @@ def append_PKCS7_padding(data):
 
 
 def strip_PKCS7_padding(data):
+    """Strip PKCS7 padding from the given data.
+    Parameters:
+        - data (bytes): Data to be stripped of padding.
+    Returns:
+        - bytes: Data with PKCS7 padding removed.
+    Processing Logic:
+        - Checks if data length is a multiple of 16.
+        - Gets the last byte of data and converts it to an integer.
+        - If the integer is less than or equal to 16, return data without the last n bytes where n is the integer.
+        - Otherwise, return the original data."""
+    
     if len(data) % 16 != 0:
         raise ValueError("invalid length")
 
@@ -270,6 +352,20 @@ class AES(object):
     U4 = [0x00000000, 0x090d0b0e, 0x121a161c, 0x1b171d12, 0x24342c38, 0x2d392736, 0x362e3a24, 0x3f23312a, 0x48685870, 0x4165537e, 0x5a724e6c, 0x537f4562, 0x6c5c7448, 0x65517f46, 0x7e466254, 0x774b695a, 0x90d0b0e0, 0x99ddbbee, 0x82caa6fc, 0x8bc7adf2, 0xb4e49cd8, 0xbde997d6, 0xa6fe8ac4, 0xaff381ca, 0xd8b8e890, 0xd1b5e39e, 0xcaa2fe8c, 0xc3aff582, 0xfc8cc4a8, 0xf581cfa6, 0xee96d2b4, 0xe79bd9ba, 0x3bbb7bdb, 0x32b670d5, 0x29a16dc7, 0x20ac66c9, 0x1f8f57e3, 0x16825ced, 0x0d9541ff, 0x04984af1, 0x73d323ab, 0x7ade28a5, 0x61c935b7, 0x68c43eb9, 0x57e70f93, 0x5eea049d, 0x45fd198f, 0x4cf01281, 0xab6bcb3b, 0xa266c035, 0xb971dd27, 0xb07cd629, 0x8f5fe703, 0x8652ec0d, 0x9d45f11f, 0x9448fa11, 0xe303934b, 0xea0e9845, 0xf1198557, 0xf8148e59, 0xc737bf73, 0xce3ab47d, 0xd52da96f, 0xdc20a261, 0x766df6ad, 0x7f60fda3, 0x6477e0b1, 0x6d7aebbf, 0x5259da95, 0x5b54d19b, 0x4043cc89, 0x494ec787, 0x3e05aedd, 0x3708a5d3, 0x2c1fb8c1, 0x2512b3cf, 0x1a3182e5, 0x133c89eb, 0x082b94f9, 0x01269ff7, 0xe6bd464d, 0xefb04d43, 0xf4a75051, 0xfdaa5b5f, 0xc2896a75, 0xcb84617b, 0xd0937c69, 0xd99e7767, 0xaed51e3d, 0xa7d81533, 0xbccf0821, 0xb5c2032f, 0x8ae13205, 0x83ec390b, 0x98fb2419, 0x91f62f17, 0x4dd68d76, 0x44db8678, 0x5fcc9b6a, 0x56c19064, 0x69e2a14e, 0x60efaa40, 0x7bf8b752, 0x72f5bc5c, 0x05bed506, 0x0cb3de08, 0x17a4c31a, 0x1ea9c814, 0x218af93e, 0x2887f230, 0x3390ef22, 0x3a9de42c, 0xdd063d96, 0xd40b3698, 0xcf1c2b8a, 0xc6112084, 0xf93211ae, 0xf03f1aa0, 0xeb2807b2, 0xe2250cbc, 0x956e65e6, 0x9c636ee8, 0x877473fa, 0x8e7978f4, 0xb15a49de, 0xb85742d0, 0xa3405fc2, 0xaa4d54cc, 0xecdaf741, 0xe5d7fc4f, 0xfec0e15d, 0xf7cdea53, 0xc8eedb79, 0xc1e3d077, 0xdaf4cd65, 0xd3f9c66b, 0xa4b2af31, 0xadbfa43f, 0xb6a8b92d, 0xbfa5b223, 0x80868309, 0x898b8807, 0x929c9515, 0x9b919e1b, 0x7c0a47a1, 0x75074caf, 0x6e1051bd, 0x671d5ab3, 0x583e6b99, 0x51336097, 0x4a247d85, 0x4329768b, 0x34621fd1, 0x3d6f14df, 0x267809cd, 0x2f7502c3, 0x105633e9, 0x195b38e7, 0x024c25f5, 0x0b412efb, 0xd7618c9a, 0xde6c8794, 0xc57b9a86, 0xcc769188, 0xf355a0a2, 0xfa58abac, 0xe14fb6be, 0xe842bdb0, 0x9f09d4ea, 0x9604dfe4, 0x8d13c2f6, 0x841ec9f8, 0xbb3df8d2, 0xb230f3dc, 0xa927eece, 0xa02ae5c0, 0x47b13c7a, 0x4ebc3774, 0x55ab2a66, 0x5ca62168, 0x63851042, 0x6a881b4c, 0x719f065e, 0x78920d50, 0x0fd9640a, 0x06d46f04, 0x1dc37216, 0x14ce7918, 0x2bed4832, 0x22e0433c, 0x39f75e2e, 0x30fa5520, 0x9ab701ec, 0x93ba0ae2, 0x88ad17f0, 0x81a01cfe, 0xbe832dd4, 0xb78e26da, 0xac993bc8, 0xa59430c6, 0xd2df599c, 0xdbd25292, 0xc0c54f80, 0xc9c8448e, 0xf6eb75a4, 0xffe67eaa, 0xe4f163b8, 0xedfc68b6, 0x0a67b10c, 0x036aba02, 0x187da710, 0x1170ac1e, 0x2e539d34, 0x275e963a, 0x3c498b28, 0x35448026, 0x420fe97c, 0x4b02e272, 0x5015ff60, 0x5918f46e, 0x663bc544, 0x6f36ce4a, 0x7421d358, 0x7d2cd856, 0xa10c7a37, 0xa8017139, 0xb3166c2b, 0xba1b6725, 0x8538560f, 0x8c355d01, 0x97224013, 0x9e2f4b1d, 0xe9642247, 0xe0692949, 0xfb7e345b, 0xf2733f55, 0xcd500e7f, 0xc45d0571, 0xdf4a1863, 0xd647136d, 0x31dccad7, 0x38d1c1d9, 0x23c6dccb, 0x2acbd7c5, 0x15e8e6ef, 0x1ce5ede1, 0x07f2f0f3, 0x0efffbfd, 0x79b492a7, 0x70b999a9, 0x6bae84bb, 0x62a38fb5, 0x5d80be9f, 0x548db591, 0x4f9aa883, 0x4697a38d]
 
     def __init__(self, key):
+        """Initialize the AES cipher with the given key.
+            Parameters:
+                - key (str): The key used for encryption/decryption. Must be 16, 24, or 32 bytes long.
+            Returns:
+                - None
+            Processing Logic:
+                - Validates the key size.
+                - Calculates the number of rounds based on the key size.
+                - Initializes round key arrays for encryption and decryption.
+                - Converts the key into integers.
+                - Copies values into round key arrays.
+                - Performs key expansion based on the key size.
+                - Inverse-Cipher-ifies the decryption round key."""
+        
 
         if len(key) not in (16, 24, 32):
             raise ValueError('Invalid key size')
@@ -411,6 +507,22 @@ class AES(object):
 
 
 def decrypt(self, ciphertext):
+        """Decrypts a 128-bit ciphertext using the AES algorithm.
+        Parameters:
+            - ciphertext (bytes): The ciphertext to be decrypted. Must be 16 bytes in length.
+        Returns:
+            - bytes: The decrypted plaintext.
+        Processing Logic:
+            - Raises a ValueError if the length of the ciphertext is not 16 bytes.
+            - Uses the AES algorithm to decrypt the ciphertext.
+            - Applies round transforms to the ciphertext.
+            - The last round is special and requires additional processing.
+            - Returns the decrypted plaintext as bytes.
+        Example:
+            >>> ciphertext = b'\x9b\x1e\x36\x18\x8e\xac\x4e\x52\x1e\x5a\x3c\x8b\x4f\x9b\x8e\x1f'
+            >>> decrypt(ciphertext)
+            b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff'"""
+        
 
         if len(ciphertext) != 16:
             raise ValueError('wrong block length')
@@ -447,12 +559,42 @@ def decrypt(self, ciphertext):
 class AESBlockModeOfOperation(object):
     '''Super-class for AES modes of operation that require blocks.'''
     def __init__(self, key):
+        """Initializes an instance of the AES class with the given key.
+        Parameters:
+            - key (bytes): A 16, 24, or 32 byte string representing the encryption key.
+        Returns:
+            - None: This function does not return anything.
+        Processing Logic:
+            - Initialize AES class with key.
+            - Key must be 16, 24, or 32 bytes.
+            - Key must be in bytes format."""
+        
         self._aes = AES(key)
 
     def decrypt(self, ciphertext):
+        """Decrypts a given ciphertext using a specified algorithm.
+        Parameters:
+            - ciphertext (str): The ciphertext to be decrypted.
+        Returns:
+            - plaintext (str): The decrypted plaintext.
+        Processing Logic:
+            - Uses a specified algorithm.
+            - Raises an exception if not implemented."""
+        
         raise Exception('not implemented')
 
     def encrypt(self, plaintext):
+        """Encrypts the given plaintext using a specific encryption algorithm.
+        Parameters:
+            - plaintext (str): The string to be encrypted.
+        Returns:
+            - encrypted (str): The encrypted version of the plaintext.
+        Processing Logic:
+            - Uses a specific encryption algorithm.
+            - Raises an exception if not implemented.
+            - Only works with strings.
+            - Does not modify the original plaintext."""
+        
         raise Exception('not implemented')
 
 
@@ -461,6 +603,18 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
     name = "Cipher-Block Chaining (CBC)"
 
     def __init__(self, key, iv=None):
+        """Encrypts a message using the AES block cipher.
+        Parameters:
+            - key (str): The encryption key.
+            - iv (str): The initialization vector, if applicable.
+        Returns:
+            - str: The encrypted message.
+        Processing Logic:
+            - Initialize last cipherblock to 16 bytes.
+            - Raise error if iv is not 16 bytes.
+            - Convert iv to bytes.
+            - Initialize AES block mode of operation with key."""
+        
         if iv is None:
             self._last_cipherblock = [0] * 16
         elif len(iv) != 16:
@@ -471,6 +625,18 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
         AESBlockModeOfOperation.__init__(self, key)
 
     def encrypt(self, plaintext):
+        """Encrypts a 16-byte plaintext block using the AES algorithm.
+        Parameters:
+            - plaintext (bytes): The 16-byte block of plaintext to be encrypted.
+        Returns:
+            - bytes: The encrypted ciphertext block.
+        Processing Logic:
+            - Checks if the length of the plaintext is 16 bytes.
+            - Converts the plaintext to bytes.
+            - XORs each byte of the plaintext with the corresponding byte of the last cipher block.
+            - Encrypts the resulting block using the AES algorithm.
+            - Converts the encrypted block to bytes and returns it."""
+        
         if len(plaintext) != 16:
             raise ValueError('plaintext block must be 16 bytes')
 
@@ -481,6 +647,18 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
         return _bytes_to_string(self._last_cipherblock)
 
     def decrypt(self, ciphertext):
+        """Decrypts a 16-byte ciphertext block using the Advanced Encryption Standard (AES) algorithm.
+        Parameters:
+            - ciphertext (str): The 16-byte ciphertext block to be decrypted.
+        Returns:
+            - str: The decrypted plaintext block.
+        Processing Logic:
+            - Checks if the length of the ciphertext block is 16 bytes.
+            - Converts the ciphertext block to bytes.
+            - XORs each byte of the decrypted block with the corresponding byte of the last cipherblock.
+            - Updates the last cipherblock with the current cipherblock.
+            - Converts the decrypted block to a string."""
+        
         if len(ciphertext) != 16:
             raise ValueError('ciphertext block must be 16 bytes')
 
@@ -492,6 +670,19 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
 
 
 def CBCenc(aesObj, plaintext, base64=False):
+    """Encrypts plaintext using AES cipher in CBC mode.
+    Parameters:
+        - aesObj (AES object): Object containing AES encryption key.
+        - plaintext (str): Plaintext to be encrypted.
+        - base64 (bool): Optional parameter to encode ciphertext in base64 format. Default is False.
+    Returns:
+        - ciphertext (str): Encrypted ciphertext.
+    Processing Logic:
+        - Break plaintext into 16 byte chunks.
+        - Append PKCS7 padding to last chunk if necessary.
+        - Encrypt each chunk using AES cipher.
+        - Concatenate encrypted chunks to form ciphertext."""
+    
 
     # break the blocks in 16 byte chunks, padding the last chunk if necessary
     blocks = [plaintext[0+i:16+i] for i in range(0, len(plaintext), 16)]
@@ -505,6 +696,22 @@ def CBCenc(aesObj, plaintext, base64=False):
 
 
 def CBCdec(aesObj, ciphertext, base64=False):
+    """Decrypts ciphertext using AES cipher block chaining mode.
+    Parameters:
+        - aesObj (AES object): Object containing AES encryption key.
+        - ciphertext (str): Encrypted message to be decrypted.
+        - base64 (bool): Optional parameter to specify if ciphertext is base64 encoded. Default is False.
+    Returns:
+        - str: Decrypted plaintext message.
+    Processing Logic:
+        - Break ciphertext into 16 byte chunks.
+        - Pad last chunk if necessary.
+        - Decrypt each chunk using AES object.
+        - Strip PKCS7 padding from last chunk.
+        - Concatenate all decrypted chunks to form plaintext message.
+    Example:
+        CBCdec(aesObj, ciphertext, base64=True)"""
+    
 
     # break the blocks in 16 byte chunks, padding the last chunk if necessary
     blocks = [ciphertext[0+i:16+i] for i in range(0, len(ciphertext), 16)]
@@ -520,6 +727,20 @@ def CBCdec(aesObj, ciphertext, base64=False):
 
 
 def getIV():
+    """Returns a randomly generated 16-character string consisting of uppercase letters, lowercase letters, and digits.
+    Parameters:
+        - None
+    Returns:
+        - str: A randomly generated 16-character string.
+    Processing Logic:
+        - Uses the secrets module to generate a random integer between 0 and 255.
+        - Converts the integer to a character using the chr() function.
+        - Repeats this process 16 times to create a 16-character string.
+        - Joins the characters together using the join() function.
+    Example:
+        getIV()
+        # Output: '2zL7hP9J1dE5kT6R'"""
+    
     # return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in xrange(16))
     return ''.join(chr(secrets.SystemRandom().randint(0, 255)) for _ in range(16))
 
@@ -579,6 +800,17 @@ def aes_decrypt_and_verify(key, data):
 
 
 def post_message(uri, data):
+    """Sends a POST request to the specified URI with the given data and returns the response.
+    Parameters:
+        - uri (str): The URI to send the request to.
+        - data (str): The data to be sent with the request.
+    Returns:
+        - str: The response from the server.
+    Processing Logic:
+        - Sends a POST request using urllib2.
+        - Uses global headers for the request.
+        - Returns the response from the server."""
+    
     global headers
     return (urllib2.urlopen(urllib2.Request(uri, data, headers))).read()
 
